@@ -11,23 +11,10 @@ import {
 } from "react-router-dom";
 import { useState } from 'react';
 
-function App() {
-   const [stu, setStu] = useState([{
-name:"Mark",
-mobile:"9829389849",
-email:"mark@yahoo.com",
-cls:"BW98WE"
-   },
-   {name:"Jacob",
-   mobile:"9874618798",
-   email:"jacob@gmail.com",
-   cls:"BW09WD"},
+export const URL = 'https://61ee202dd593d20017dbac5d.mockapi.io/students/';
 
-   {name:"Larry",
-   mobile:"8765431349",
-   email:"larry@mail.com",
-   cls:"BW67WE"}
-]);
+function App() {
+
   return (
     <BrowserRouter>
     <div className="App" >
@@ -35,9 +22,9 @@ cls:"BW98WE"
     <div className='Content-div'>
     <Routes>
       <Route path='/dashboard' element={<Dashboard/>}/>
-      <Route path='/all-students' element={<AllStudents data={{stu,setStu}}/>}/>
-      <Route path='/add-students' element={<AddStudents data={{stu,setStu}}/>}/>
-      <Route path='/edit-students/:id' element={<EditStudent data={{stu,setStu}}/>}/>
+      <Route path='/all-students' element={<AllStudents/>}/>
+      <Route path='/add-students' element={<AddStudents/>}/>
+      <Route path='/edit-students/:id' element={<EditStudent/>}/>
       <Route path='/' element={<Dashboard/>}/>
     </Routes>
     </div>

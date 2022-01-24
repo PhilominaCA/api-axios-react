@@ -3,24 +3,46 @@ import { useState } from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router-dom';
+import { URL } from '../App';
+import axios from 'axios';
 
-function AddStudents(props) {
-    console.log(props.data);
+function AddStudents() {
     const nav = useNavigate('');
     const [name, setname] = useState("");
     const [email, setemail] = useState("");
     const [mobile, setmobile] = useState("");
     const [cls, setcls] = useState("");
 
-    const handleSubmit = () => {
-        let newData = { name, mobile, email, cls };
-        props.data.setStu([...props.data.stu, newData]);
-        nav("/all-students")
+    // const handleSubmit = async () => {
+    //     await fetch(URL, {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify({
+    //             name, mobile, email, cls
+    //         })
+    //     })
+    //         .then(response => response.json())
+    //         .then((data) =>
+    //             nav("/all-students"))
+    // }
+
+    //Axios POST
+    const handleSubmit = async () => {
+        try {
+            await axios.post(URL, {
+                name, mobile, email, cls
+            })
+            nav("/all-students")
+        }
+        catch (err) {
+            alert('There is a problem, please view error in console');
+            console.log(err);
+        }
     }
     return (
         <div>
-           <h2>AddStudents</h2>
-           <hr/> 
+            <h2>AddStudents</h2>
+            <hr />
             <Form>
                 <Form.Group className="mb-3">
                     <Form.Label>Name</Form.Label>
@@ -37,7 +59,7 @@ function AddStudents(props) {
                 <Form.Group className="mb-3">
                     <Form.Label>Batch </Form.Label>
                     <Form.Control type="text" placeholder="Batch" onChange={(e) => setcls(e.target.value)} />
-                </Form.Group><br/>
+                </Form.Group><br />
                 <Button variant="success" onClick={handleSubmit}>Add Student</Button>
             </Form>
         </div>

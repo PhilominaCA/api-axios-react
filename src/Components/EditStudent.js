@@ -1,11 +1,13 @@
 import React from 'react'
-import { useState,useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button';
-import { useNavigate,useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { URL } from '../App';
+import axios from 'axios';
 
-function EditStudent( props) {
-    
+function EditStudent() {
+
     const params = useParams();
     const nav = useNavigate('');
     const [name, setname] = useState("");
@@ -13,55 +15,85 @@ function EditStudent( props) {
     const [mobile, setmobile] = useState("");
     const [cls, setcls] = useState("");
 
-    const handleSubmit = () => {
-        let newData = { name, mobile, email, cls };
-        let replicateArray = [...props.data.stu];
-        replicateArray.splice(params.id,1,newData)
-        props.data.setStu(replicateArray);
-        nav("/all-students")
-    }
-
-    useEffect(()=>{
-        if(params.id<props.data.stu.length
-            &&params.id>=0)
+    useEffect(() => {
         getData();
-    else
-        alert("No data found for this id...");
+    }, [])
+
+    // const getData = async () => {
+    //     await fetch(URL + params.id)
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             setname(data.name);
+    //             setemail(data.email);
+    //             setmobile(data.mobile);
+    //             setcls(data.cls);
+    //         })
+    //         .catch(err => {
+    //             console.log(err);
+    //         })
+    // }
+
+    // const handleSubmit = async () => {
+    //     await fetch(URL + params.id, {
+    //         method: 'PUT',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify({
+    //             name, mobile, email, cls
+    //         })
+    //     })
+    //         .then(response => response.json())
+    //         .then((data) =>
+    //             nav("/all-students"))
+    // }
+
+    //axios GET
+    const getData = async () => {
+        try {
+            const response = await axios.get(URL + params.id);
+            setname(response.data.name);
+            setemail(response.data.email);
+            setmobile(response.data.mobile);
+            setcls(response.data.cls);
+        }
+        catch (err) { console.log(err); }
     }
-    ,[])
 
-    const getData= ()=>{
-    setname(props.data.stu[params.id].name);
-    setemail(props.data.stu[params.id].email);
-    setmobile(props.data.stu[params.id].mobile);
-    setcls(props.data.stu[params.id].cls);
+    //Axios PUT
+    const handleSubmit = async () => {
+        try {
+            await axios.put(URL + params.id, {
+                name, mobile, email, cls
+            })
+            nav("/all-students")
+        }
+        catch (err) {
+            alert('There is a problem, please view error in console')
+            console.log(err);
+        }
     }
 
-    return (
-        <div>
-            Edit Student
-            <Form>
-                <Form.Group className="mb-3">
-                    <Form.Label>Name</Form.Label>
-                    <Form.Control type="text" placeholder="Name" value={name} onChange={(e) => setname(e.target.value)} />
-                </Form.Group>
-                <Form.Group className="mb-3">
-                    <Form.Label>Mobile No.</Form.Label>
-                    <Form.Control type="text" placeholder="Mobile" value={mobile} onChange={(e) => setmobile(e.target.value)} />
-                </Form.Group>
-                <Form.Group className="mb-3">
-                    <Form.Label>Email address</Form.Label>
-                    <Form.Control type="text" placeholder="Email" value={email} onChange={(e) => setemail(e.target.value)} />
-                </Form.Group>
-                <Form.Group className="mb-3">
-                    <Form.Label>Batch </Form.Label>
-                    <Form.Control type="text" placeholder="Batch" value={cls} onChange={(e) => setcls(e.target.value)} />
-                </Form.Group><br/>
-                <Button variant="success" onClick={handleSubmit}>Update Student</Button>
-            </Form>
+    return <>  Edit Student
+        <Form>
+            <Form.Group className="mb-3">
+                <Form.Label>Name</Form.Label>
+                <Form.Control type="text" placeholder="Name" value={name} onChange={(e) => setname(e.target.value)} />
+            </Form.Group>
+            <Form.Group className="mb-3">
+                <Form.Label>Mobile No.</Form.Label>
+                <Form.Control type="text" placeholder="Mobile" value={mobile} onChange={(e) => setmobile(e.target.value)} />
+            </Form.Group>
+            <Form.Group className="mb-3">
+                <Form.Label>Email address</Form.Label>
+                <Form.Control type="text" placeholder="Email" value={email} onChange={(e) => setemail(e.target.value)} />
+            </Form.Group>
+            <Form.Group className="mb-3">
+                <Form.Label>Batch </Form.Label>
+                <Form.Control type="text" placeholder="Batch" value={cls} onChange={(e) => setcls(e.target.value)} />
+            </Form.Group><br />
+            <Button variant="success" onClick={handleSubmit}>Update Student</Button>
+        </Form>
 
-        </div>
-    )
+    </>
 }
 
 export default EditStudent
